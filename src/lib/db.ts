@@ -1,10 +1,11 @@
 import { neon } from '@neondatabase/serverless';
+import { env } from '$env/dynamic/private';
 
 let sql: ReturnType<typeof neon> | null = null;
 
 function getSql() {
 	if (!sql) {
-		sql = neon(process.env.DATABASE_URL!);
+		sql = neon(env.DATABASE_URL);
 	}
 	return sql;
 }
