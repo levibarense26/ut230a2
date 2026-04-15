@@ -5,16 +5,16 @@ import { saveSubmission } from '$lib/db';
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const data = await request.json();
-		
+
 		const required = ['meal_time', 'group_size', 'priority', 'immersion', 'map1_seat', 'map2_seat', 'map3_seat', 'dwelling1', 'dwelling2', 'archetype'];
-		
+
 		for (const field of required) {
 			if (!(field in data)) {
 				return json({ error: `Missing field: ${field}` }, { status: 400 });
 			}
 		}
 
-		const id = saveSubmission({
+		const id = await saveSubmission({
 			meal_time: data.meal_time,
 			group_size: data.group_size,
 			priority: data.priority,
