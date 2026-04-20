@@ -471,45 +471,45 @@
 		{/if}
 
 {#if quizState.currentFrame === 8}
-			<div class="frame">
-				<div class="frame-card">
-					<div class="quiz-left">
-						<h2>Choose your seat:</h2>
-						<p class="context">It's busier now! Where do you sit with more constraints?</p>
-<SeatMap></SeatMap> 
-					width={300}
-					height={240}
-						<h2>Select the seat you typically take</h2>
-						<p class="context">Medium occupancy</p>
-<SeatMapSVG 
-					width={400}
-					height={380}
-					selectedSeat={quizState.map2Seat}
-					occupancy="medium"
-					onSelect={handleMap2Select}
-				/>
-						<div class="map-actions">
-							<button class="btn-secondary" onclick={prevFrame}>Back</button>
-							<button 
-								class="btn-primary" 
-								disabled={!quizState.map2Seat}
-								onclick={nextFrame}
-							>
-								Next
-							</button>
-						</div>
-					</div>
-					<div class="quiz-right">
-						<div class="picture-container picture-layout-single">
-							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
-							<!-- <div class="picture-frame"><img src={getPictureSrc(9, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(9, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(9, 4)} alt="4"></div> -->
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
+    <div class="frame">
+        <div class="frame-card">
+            <div class="quiz-left">
+                <h2>Choose your seat:</h2>
+                <p class="context">It's busier now! Where do you sit with more constraints?</p>
+                <SeatMap 
+                    width={300}
+                    height={240}
+                    selectedSeat={quizState.map1Seat}  // Added required prop
+                />
+                <h2>Select the seat you typically take</h2>
+                <p class="context">Medium occupancy</p>
+                <SeatMapSVG 
+                    width={400}
+                    height={380}
+                    selectedSeat={quizState.map2Seat}
+                    occupancy="medium"
+                    onSelect={handleMap2Select}
+                />
+                <div class="map-actions">
+                    <button class="btn-secondary" onclick={prevFrame}>Back</button>
+                    <button 
+                        class="btn-primary" 
+                        disabled={!quizState.map2Seat}
+                        onclick={nextFrame}
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+            <div class="quiz-right">
+                <div class="picture-container picture-layout-single">
+                    <div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
+                    <!-- <div class="picture-frame"><img src="/solitude.jpg" alt="2"></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 
 		{#if quizState.currentFrame === 9}
 			<div class="frame">
@@ -520,6 +520,7 @@
 						<SeatMap 
 							width={200}
 							height={160}
+						/SeatMap>
 						<h2>Select the seat you typically take</h2>
 						<p class="context">High occupancy</p>
 						<SeatMapSVG 
@@ -548,6 +549,34 @@
 							<div class="picture-frame"><img src={getPictureSrc(10, 4)} alt="4"></div>
 						</div>
 					</div>
+				</div>
+			</div>
+		{/if}
+
+		{#if quizState.currentFrame === 10}
+			<div class="frame frame-map">
+				<h2>Select the seat you typically take</h2>
+				<p class="context">Moderate occupancy</p>
+<SeatMap 
+					width={300}
+					height={240}
+					selectedSeat={quizState.map1Seat}
+					occupancy="low"
+					onSelect={handleMap1Select}
+				/>
+				<div class="map-actions">
+					<button class="btn-secondary" onclick={prevFrame}>Back</button>
+					<button 
+						class="btn-primary" 
+						disabled={!quizState.map2Seat}
+						onclick={nextFrame}
+					>
+						Next
+					</button>
+
+
+
+				
 				</div>
 			</div>
 		{/if}
