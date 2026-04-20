@@ -5,6 +5,7 @@
 	import SeatMapSVG from '$lib/components/SeatMapSVG.svelte';
 	import Heatmap from '$lib/components/Heatmap.svelte';
 	import type { QuizState } from '$lib/stores/quiz';
+    import SeatMap from '$lib/components/SeatMap.svelte';
 
 	let quizState: QuizState = $state({
 		currentFrame: 1,
@@ -475,7 +476,7 @@
 					<div class="quiz-left">
 						<h2>Choose your seat:</h2>
 						<p class="context">It's busier now! Where do you sit with more constraints?</p>
-<SeatMap 
+<SeatMap></SeatMap> 
 					width={300}
 					height={240}
 						<h2>Select the seat you typically take</h2>
