@@ -224,7 +224,7 @@
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-top">
-						<h1>Discover Your Dining Hall Archetype</h1>
+						<h1 style="text-align: center;">Discover Your Dining Hall Archetype</h1>
 						<!-- <p class="subtitle">Discover your dining hall archetype</p> -->
 						<div 
 							class="swipe-slider"
@@ -249,7 +249,7 @@
 						<!-- <h2>Two main reasons: comfort and rejuvenation.</h2>
 						<p1> Students need a break from their busy schedules. The dining hall, in contrast to other university spaces, is designed as a space for relaxation. Students go there to relieve stress and recover a bit of energy from their days. </p1> -->
 						<div class="picture-container picture-layout-single">
-							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
+							<div class="picture-frame"><img src="/intro.HEIC" alt="1"></div>
 						</div>
 					</div>
 				</div>
@@ -266,8 +266,8 @@
 							<span style="color: #82D5E1; font-weight:bold"> comfort </span>
 							and 
 							<span style="color: #82D5E1; font-weight:bold"> rejuvenation </span>.</p>
-						<p class="context">Students need a break from their busy schedules. The dining hall, in contrast to other university spaces, is designed as a space for relaxation. Students go there to relieve stress and recover a bit of energy from their days. </p>
-						<p class="context">Mo-Jo Dining Hall is a hub for students. It sits on Central Campus, not far from the Diag. From burgers to rice dishes to a salad bar, students can enjoy a variety of meal options and cuisines. This dining hall is one of the largest and most diverse on campus, which attracts many students. It is almost always busy, so plan on not getting the perfect seat!</p>
+						<p class="context" style="text-align: left;">Students need a break from their busy schedules. The dining hall, in contrast to other university spaces, is designed as a space for relaxation. Students go there to relieve stress and recover a bit of energy from their days. </p>
+						<p class="context" style="text-align: left;">Mo-Jo Dining Hall is a hub for students. It sits on Central Campus, not far from the Diag. From burgers to rice dishes to a salad bar, students can enjoy a variety of meal options and cuisines. This dining hall is one of the largest and most diverse on campus, which attracts many students. It is almost always busy, so plan on not getting the perfect seat!</p>
 						<div class="nav-actions">
 							<button class="btn-secondary" onclick={prevFrame}>Back</button>
 							<button class="btn-primary" onclick={nextFrame}>Next</button>
@@ -291,6 +291,7 @@
 					<div class="quiz-left">
 						<!-- <p class="context">placeholder</p> -->
 						<h2>What meal are you eating?</h2>
+						<p class="context">People want different things at different times of the day. Use patterns in the dining halls vary throughout the day as people move throughout their days.</p>
 						<div class="options">
 							{#each MEAL_OPTIONS as meal}
 								<button 
@@ -305,7 +306,7 @@
 						<button class="btn-back" onclick={prevFrame}>Back</button>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
+						<div class="picture-container picture-layout-single">
 							<div class="picture-frame"><img src="/food_area.jpg" alt="1"></div>
 							<!-- <div class="picture-frame"><img src={getPictureSrc(3, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(3, 3)} alt="3"></div>
@@ -353,6 +354,7 @@
 					<div class="quiz-left">
 						<!-- <p class="context">placeholder</p> -->
 						<h2>Where do you go in the dining hall first?</h2>
+						<p class="context">First impressions are important. Where people choose to go first in the dining hall helps indicate their reason for being there and what they value most.</p>
 						<div class="options">
 							{#each PRIORITY_OPTIONS as priority}
 								<button 
@@ -368,7 +370,7 @@
 					</div>
 					<div class="quiz-right">
 						<div class="picture-container picture-layout-single">
-							<div class="picture-frame"><img src="/path_choice.jpg" alt="1"></div>
+							<div class="picture-frame"><img src="/choice2.HEIC" alt="1"></div>
 							<!-- <div class="picture-frame"><img src={getPictureSrc(5, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(5, 3)} alt="3"></div>
 							<div class="picture-frame"><img src={getPictureSrc(5, 4)} alt="4"></div> -->
@@ -382,8 +384,9 @@
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<p class="context">placeholder</p>
-						<h2>What are you going to do in your seat?</h2>
+						<!-- <p class="context">placeholder</p> -->
+						<h2>What are you going to do while you eat?</h2>
+						<p class="context">What do you want from your dining hall experience? The way you interact with the dining hall will change how your experience plays out.</p>
 						<div class="options">
 							{#each IMMERSION_OPTIONS as immersion}
 								<button 
@@ -398,18 +401,18 @@
 						<button class="btn-back" onclick={prevFrame}>Back</button>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(6, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(6, 2)} alt="2"></div>
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/eating.jpg" alt="1"></div>
+							<!-- <div class="picture-frame"><img src={getPictureSrc(6, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(6, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(6, 4)} alt="4"></div>
+							<div class="picture-frame"><img src={getPictureSrc(6, 4)} alt="4"></div> -->
 						</div>
 					</div>
 				</div>
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 7}
+		<!-- {#if quizState.currentFrame === 7}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -430,13 +433,13 @@
 					</div>
 				</div>
 			</div>
-		{/if}
+		{/if} -->
 
-		{#if quizState.currentFrame === 8}
+		{#if quizState.currentFrame === 7}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<h2>Select the seat you typically take</h2>
+						<h2>Select your preferred seat</h2>
 						<p class="context">Low occupancy</p>
 						<SeatMapSVG 
 							width={400}
@@ -448,7 +451,7 @@
 						<div class="map-actions">
 							<button class="btn-secondary" onclick={prevFrame}>Back</button>
 							<button 
-								class="btn-primary" 
+								class="btn-primary"
 								disabled={!quizState.map1Seat}
 								onclick={nextFrame}
 							>
@@ -457,21 +460,24 @@
 						</div>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(8, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(8, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(8, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(8, 4)} alt="4"></div>
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
+							<!-- <div class="picture-frame"><img src="/solitude.jpg" alt="2"></div> -->
 						</div>
 					</div>
 				</div>
 			</div>
 		{/if}
 
-{#if quizState.currentFrame === 9}
+{#if quizState.currentFrame === 8}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
+						<h2>Choose your seat:</h2>
+						<p class="context">It's busier now! Where do you sit with more constraints?</p>
+<SeatMap 
+					width={300}
+					height={240}
 						<h2>Select the seat you typically take</h2>
 						<p class="context">Medium occupancy</p>
 <SeatMapSVG 
@@ -493,21 +499,26 @@
 						</div>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(9, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(9, 2)} alt="2"></div>
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
+							<!-- <div class="picture-frame"><img src={getPictureSrc(9, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(9, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(9, 4)} alt="4"></div>
+							<div class="picture-frame"><img src={getPictureSrc(9, 4)} alt="4"></div> -->
 						</div>
 					</div>
 				</div>
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 10}
+		{#if quizState.currentFrame === 9}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
+						<h2>Choose your seat:</h2>
+						<p class="context">This section is nearly full. Where do you sit now?</p>
+						<SeatMap 
+							width={200}
+							height={160}
 						<h2>Select the seat you typically take</h2>
 						<p class="context">High occupancy</p>
 						<SeatMapSVG 
@@ -544,8 +555,8 @@
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<p class="context">placeholder</p>
-						<h2>Where do you live?</h2>
+						<h2>How long will you spend in your seat?</h2>
+						<p class="context">How comfortable do you feel with this spot?</p>
 						<div class="options">
 							{#each DWELLING_OPTIONS as dwelling}
 								<button 
@@ -560,18 +571,18 @@
 						<button class="btn-back" onclick={prevFrame}>Back</button>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
+						<div class="picture-container picture-layout-single">
 							<div class="picture-frame"><img src={getPictureSrc(11, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(11, 2)} alt="2"></div>
+							<!-- <div class="picture-frame"><img src={getPictureSrc(11, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(11, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(11, 4)} alt="4"></div>
+							<div class="picture-frame"><img src={getPictureSrc(11, 4)} alt="4"></div> -->
 						</div>
 					</div>
 				</div>
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 12}
+		<!-- {#if quizState.currentFrame === 11}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -588,9 +599,9 @@
 					</div>
 				</div>
 			</div>
-		{/if}
+		{/if} -->
 
-		{#if quizState.currentFrame === 13}
+		{#if quizState.currentFrame === 11}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -611,7 +622,7 @@
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 14}
+		{#if quizState.currentFrame === 12}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -634,7 +645,7 @@
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 15}
+		{#if quizState.currentFrame === 13}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -657,7 +668,7 @@
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 16}
+		{#if quizState.currentFrame === 14}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -680,7 +691,7 @@
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 17}
+		{#if quizState.currentFrame === 15}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -850,6 +861,19 @@
 		overflow: hidden;
 	}
 
+	.quiz-center2 {
+		flex: 0 0 50%;
+		background: #e0e0e0;
+		border-radius: 8px;
+		height: 90%;
+		max-height: 80vh;
+		display: block;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+		overflow: hidden;
+	}
+
 	.picture-container {
 		width: 100%;
 		height: 100%;
@@ -937,11 +961,18 @@
 		color: #000000;
 		font-size: 1.2rem;
 		margin-bottom: 0.5rem;
+		text-align: center;
 	}
 
+	h1 {
+		font-size: 2.5rem;
+		margin-bottom: 0.5rem;
+	}
+	
 	h2 {
 		font-size: 1.8rem;
 		margin-bottom: 1.5rem;
+		text-align: center;
 	}
 
 	.options {
