@@ -219,14 +219,13 @@
 
 <main>
 	<div class="progress-bar" style="width: {getProgress()}%"></div>
-	
 	<div class="container">
 		{#if quizState.currentFrame === 1}
 			<div class="frame">
 				<div class="frame-card">
-					<div class="quiz-left">
-						<h1>Why do people go to the dining hall</h1>
-						<p class="subtitle">Discover your dining hall archetype</p>
+					<div class="quiz-top">
+						<h1>Discover Your Dining Hall Archetype</h1>
+						<!-- <p class="subtitle">Discover your dining hall archetype</p> -->
 						<div 
 							class="swipe-slider"
 							bind:this={sliderTrack}
@@ -247,11 +246,10 @@
 						</div>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(1, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(1, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(1, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(1, 4)} alt="4"></div>
+						<!-- <h2>Two main reasons: comfort and rejuvenation.</h2>
+						<p1> Students need a break from their busy schedules. The dining hall, in contrast to other university spaces, is designed as a space for relaxation. Students go there to relieve stress and recover a bit of energy from their days. </p1> -->
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
 						</div>
 					</div>
 				</div>
@@ -260,22 +258,28 @@
 
 		{#if quizState.currentFrame === 2}
 			<div class="frame">
-				<div class="frame-card">
-					<div class="quiz-left">
-						<h2>Give viewers student empathy</h2>
-						<p class="placeholder">Context content here</p>
+				<div class="frame-card2">
+					<div class="quiz-center">
+						<h1>Why do people go to the dining hall?</h1>
+						<p class="subtitle">
+							Two main reasons: 
+							<span style="color: #82D5E1; font-weight:bold"> comfort </span>
+							and 
+							<span style="color: #82D5E1; font-weight:bold"> rejuvenation </span>.</p>
+						<p class="context">Students need a break from their busy schedules. The dining hall, in contrast to other university spaces, is designed as a space for relaxation. Students go there to relieve stress and recover a bit of energy from their days. </p>
+						<p class="context">Mo-Jo Dining Hall is a hub for students. It sits on Central Campus, not far from the Diag. From burgers to rice dishes to a salad bar, students can enjoy a variety of meal options and cuisines. This dining hall is one of the largest and most diverse on campus, which attracts many students. It is almost always busy, so plan on not getting the perfect seat!</p>
 						<div class="nav-actions">
 							<button class="btn-secondary" onclick={prevFrame}>Back</button>
 							<button class="btn-primary" onclick={nextFrame}>Next</button>
 						</div>
-					</div>
+					<!-- </div>
 					<div class="quiz-right">
 						<div class="picture-container picture-layout-4">
 							<div class="picture-frame"><img src={getPictureSrc(2, 1)} alt="1"></div>
 							<div class="picture-frame"><img src={getPictureSrc(2, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(2, 3)} alt="3"></div>
 							<div class="picture-frame"><img src={getPictureSrc(2, 4)} alt="4"></div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -285,7 +289,7 @@
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<p class="context">placeholder</p>
+						<!-- <p class="context">placeholder</p> -->
 						<h2>What meal are you eating?</h2>
 						<div class="options">
 							{#each MEAL_OPTIONS as meal}
@@ -302,10 +306,10 @@
 					</div>
 					<div class="quiz-right">
 						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(3, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(3, 2)} alt="2"></div>
+							<div class="picture-frame"><img src="/food_area.jpg" alt="1"></div>
+							<!-- <div class="picture-frame"><img src={getPictureSrc(3, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(3, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(3, 4)} alt="4"></div>
+							<div class="picture-frame"><img src={getPictureSrc(3, 4)} alt="4"></div> -->
 						</div>
 					</div>
 				</div>
@@ -316,7 +320,7 @@
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<p class="context">placeholder</p>
+						<!-- <p class="context">placeholder</p> -->
 						<h2>Who are you eating with?</h2>
 						<div class="options">
 							{#each GROUP_OPTIONS as group}
@@ -332,11 +336,11 @@
 						<button class="btn-back" onclick={prevFrame}>Back</button>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(4, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(4, 2)} alt="2"></div>
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/conversation.jpg" alt="1"></div>
+							<!-- <div class="picture-frame"><img src={getPictureSrc(4, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(4, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(4, 4)} alt="4"></div>
+							<div class="picture-frame"><img src={getPictureSrc(4, 4)} alt="4"></div> -->
 						</div>
 					</div>
 				</div>
@@ -347,7 +351,7 @@
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<p class="context">placeholder</p>
+						<!-- <p class="context">placeholder</p> -->
 						<h2>Where do you go in the dining hall first?</h2>
 						<div class="options">
 							{#each PRIORITY_OPTIONS as priority}
@@ -363,11 +367,11 @@
 						<button class="btn-back" onclick={prevFrame}>Back</button>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(5, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(5, 2)} alt="2"></div>
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/path_choice.jpg" alt="1"></div>
+							<!-- <div class="picture-frame"><img src={getPictureSrc(5, 2)} alt="2"></div>
 							<div class="picture-frame"><img src={getPictureSrc(5, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(5, 4)} alt="4"></div>
+							<div class="picture-frame"><img src={getPictureSrc(5, 4)} alt="4"></div> -->
 						</div>
 					</div>
 				</div>
@@ -767,7 +771,8 @@
 	:global(body) {
 		margin: 0;
 		padding: 0;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		/* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; */
+		font-family: Helvetica;
 		background: #fafafa;
 		color: #333;
 	}
@@ -780,7 +785,7 @@
 
 	.progress-bar {
 		height: 4px;
-		background: #4caf50;
+		background: #82D5E1;
 		transition: width 0.3s ease;
 	}
 
@@ -858,6 +863,34 @@
 		overflow: hidden;
 	}
 
+.frame-card2 {
+		background: white;
+		border-radius: 12px;
+		padding: 50px;
+		display: block;
+		flex-direction: column;
+		gap: 16px;
+		align-items: column;
+		justify-content: center;
+		width: 100%;
+		max-width: 100%;
+		height: 80vh;
+		box-sizing: border-box;
+	}
+
+	.quiz-center {
+		flex: 0 0 50%;
+		background: #e0e0e0;
+		border-radius: 8px;
+		height: 70%;
+		max-height: 80vh;
+		display: block;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+		overflow: hidden;
+	}
+
 	.picture-container {
 		width: 100%;
 		height: 100%;
@@ -869,7 +902,7 @@
 	}
 
 	.picture-frame {
-		background: #ccc;
+		background: #ffffff;
 		border-radius: 4px;
 		overflow: hidden;
 		display: flex;
@@ -936,14 +969,14 @@
 	}
 
 	.subtitle {
-		font-size: 1.2rem;
-		color: #666;
+		font-size: 1.5rem;
+		color: #000000;
 		margin-bottom: 2rem;
 	}
 
 	.context {
-		color: #888;
-		font-size: 0.9rem;
+		color: #000000;
+		font-size: 1.2rem;
 		margin-bottom: 0.5rem;
 	}
 
@@ -968,13 +1001,13 @@
 	}
 
 	.btn-primary {
-		background: #4caf50;
+		background: #82D5E1;
 		color: white;
 		border: none;
 	}
 
 	.btn-primary:hover {
-		background: #43a047;
+		background: #82D5E1;
 	}
 
 	.btn-primary:disabled {
@@ -999,19 +1032,19 @@
 	}
 
 	.btn-option:hover {
-		border-color: #4caf50;
+		border-color: #82D5E1;
 	}
 
 	.btn-option.selected {
-		background: #e8f5e9;
-		border-color: #4caf50;
-		color: #2e7d32;
+		background: #B4E5EC;
+		border-color: #82D5E1;
+		color: #333333;
 	}
 
 	.btn-back {
-		background: none;
+		background: #afafaf;
 		border: none;
-		color: #888;
+		color: #000000;
 		cursor: pointer;
 		padding: 8px 16px;
 	}
@@ -1070,7 +1103,7 @@
 	.archetype-name {
 		font-size: 3rem;
 		font-weight: bold;
-		color: #4caf50;
+		color: #82D5E1;
 		margin: 1rem 0;
 	}
 
@@ -1152,7 +1185,7 @@
 		top: 0;
 		left: 0;
 		height: 100%;
-		background: linear-gradient(90deg, #4caf50, #81c784);
+		background: linear-gradient(90deg, #82D5E1, #B4E5EC);
 		transition: width 0.05s;
 		border-radius: 30px;
 	}
