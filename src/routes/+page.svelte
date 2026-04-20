@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { quizStore } from '$lib/stores/quiz';
+	import { quizStore, LOW_OCCUPANCY_DISABLED, MEDIUM_OCCUPANCY_DISABLED } from '$lib/stores/quiz';
 	import { determineArchetype, ARCHETYPE_DESCRIPTIONS, DWELLING_OPTIONS, GROUP_OPTIONS, PRIORITY_OPTIONS, IMMERSION_OPTIONS, MEAL_OPTIONS } from '$lib/archetypes';
 	import SeatMapSVG from '$lib/components/SeatMapSVG.svelte';
 	import Heatmap from '$lib/components/Heatmap.svelte';
 	import type { QuizState } from '$lib/stores/quiz';
-    import SeatMap from '$lib/components/SeatMap.svelte';
+    
 
 	let quizState: QuizState = $state({
 		currentFrame: 1,
@@ -57,10 +57,10 @@
 		};
 	});
 
-	const totalFrames = 17;
+	const totalFrames = 12;
 
 	function nextFrame() {
-		if (quizState.currentFrame === 13) {
+		if (quizState.currentFrame === 10) {
 			const archetype = determineArchetype({
 				dwelling: quizState.dwelling2 as any,
 				groupSize: quizState.groupSize as any,
@@ -156,6 +156,7 @@
 	let aggregateData: { x: number; y: number }[] = $state([]);
 	let selectedMealFilter = $state('All');
 	let loading = $state(true);
+	let availableMeals = $state<string[]>([]);
 
 	async function loadAggregateData() {
 		try {
@@ -165,6 +166,7 @@
 			const res = await fetch(url);
 			const data = await res.json();
 			aggregateData = data.submissions?.flatMap((s: any) => [s.map1_seat, s.map2_seat, s.map3_seat]) || [];
+			availableMeals = data.availableMeals || [];
 			loading = false;
 		} catch (err) {
 			console.error('Failed to load aggregate data:', err);
@@ -173,7 +175,7 @@
 	}
 
 	$effect(() => {
-		if (quizState.currentFrame === 17) {
+		if (quizState.currentFrame === 11) {
 			loadAggregateData();
 		}
 	});
@@ -413,88 +415,23 @@
 			</div>
 		{/if}
 
-		<!-- {#if quizState.currentFrame === 7}
-			<div class="frame">
-				<div class="frame-card">
-					<div class="quiz-left">
-						<h2>General view of the section</h2>
-						<p class="placeholder">Section overview content here</p>
-						<div class="nav-actions">
-							<button class="btn-secondary" onclick={prevFrame}>Back</button>
-							<button class="btn-primary" onclick={nextFrame}>Next</button>
-						</div>
-					</div>
-					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(7, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(7, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(7, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(7, 4)} alt="4"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if} -->
-
 		{#if quizState.currentFrame === 7}
-			<div class="frame">
-				<div class="frame-card">
-					<div class="quiz-left">
-						<h2>Select your preferred seat</h2>
-						<p class="context">Low occupancy</p>
-						<SeatMapSVG 
-							width={400}
-							height={380}
-							selectedSeat={quizState.map1Seat}
-							occupancy="low"
-							onSelect={handleMap1Select}
-						/>
-						<div class="map-actions">
-							<button class="btn-secondary" onclick={prevFrame}>Back</button>
-							<button 
-								class="btn-primary"
-								disabled={!quizState.map1Seat}
-								onclick={nextFrame}
-							>
-								Next
-							</button>
-						</div>
-					</div>
-					<div class="quiz-right">
-						<div class="picture-container picture-layout-single">
-							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
-							<!-- <div class="picture-frame"><img src="/solitude.jpg" alt="2"></div> -->
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
-
-{#if quizState.currentFrame === 8}
     <div class="frame">
         <div class="frame-card">
             <div class="quiz-left">
-                <h2>Choose your seat:</h2>
-                <p class="context">It's busier now! Where do you sit with more constraints?</p>
-                <SeatMap 
-                    width={300}
-                    height={240}
-                    selectedSeat={quizState.map1Seat}  // Added required prop
-                />
                 <h2>Select the seat you typically take</h2>
-                <p class="context">Medium occupancy</p>
+                <p class="context">Select a seat</p>
                 <SeatMapSVG 
                     width={400}
                     height={380}
-                    selectedSeat={quizState.map2Seat}
-                    occupancy="medium"
-                    onSelect={handleMap2Select}
+                    selectedSeat={quizState.map1Seat}
+                    onSelect={handleMap1Select}
                 />
                 <div class="map-actions">
                     <button class="btn-secondary" onclick={prevFrame}>Back</button>
                     <button 
                         class="btn-primary" 
-                        disabled={!quizState.map2Seat}
+                        disabled={!quizState.map1Seat}
                         onclick={nextFrame}
                     >
                         Next
@@ -504,23 +441,50 @@
             <div class="quiz-right">
                 <div class="picture-container picture-layout-single">
                     <div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
-                    <!-- <div class="picture-frame"><img src="/solitude.jpg" alt="2"></div> -->
                 </div>
             </div>
         </div>
     </div>
 {/if}
 
-		{#if quizState.currentFrame === 9}
+		{#if quizState.currentFrame === 8}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<h2>Choose your seat:</h2>
-						<p class="context">This section is nearly full. Where do you sit now?</p>
-						<SeatMap 
-							width={200}
-							height={160}
-						/SeatMap>
+						<h2>Select the seat you typically take</h2>
+						<p class="context">Medium occupancy</p>
+						<SeatMapSVG 
+							width={400}
+							height={380}
+							selectedSeat={quizState.map2Seat}
+							occupancy="medium"
+							disabledSeats={MEDIUM_OCCUPANCY_DISABLED}
+							onSelect={handleMap2Select}
+						/>
+						<div class="map-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button 
+								class="btn-primary" 
+								disabled={!quizState.map2Seat}
+								onclick={nextFrame}
+							>
+								Next
+							</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{/if}
+
+{#if quizState.currentFrame === 9}
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
 						<h2>Select the seat you typically take</h2>
 						<p class="context">High occupancy</p>
 						<SeatMapSVG 
@@ -528,6 +492,7 @@
 							height={380}
 							selectedSeat={quizState.map3Seat}
 							occupancy="high"
+							disabledSeats={LOW_OCCUPANCY_DISABLED}
 							onSelect={handleMap3Select}
 						/>
 						<div class="map-actions">
@@ -542,46 +507,15 @@
 						</div>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(10, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(10, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(10, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(10, 4)} alt="4"></div>
+						<div class="picture-container picture-layout-single">
+							<div class="picture-frame"><img src="/overview.jpg" alt="1"></div>
 						</div>
 					</div>
 				</div>
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 10}
-			<div class="frame frame-map">
-				<h2>Select the seat you typically take</h2>
-				<p class="context">Moderate occupancy</p>
-<SeatMap 
-					width={300}
-					height={240}
-					selectedSeat={quizState.map1Seat}
-					occupancy="low"
-					onSelect={handleMap1Select}
-				/>
-				<div class="map-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button 
-						class="btn-primary" 
-						disabled={!quizState.map2Seat}
-						onclick={nextFrame}
-					>
-						Next
-					</button>
-
-
-
-				
-				</div>
-			</div>
-		{/if}
-
-{#if quizState.currentFrame === 11}
+{#if quizState.currentFrame === 10}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -612,7 +546,7 @@
 			</div>
 		{/if}
 
-		<!-- {#if quizState.currentFrame === 11}
+		<!-- {#if quizState.currentFrame === 10}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -631,7 +565,7 @@
 			</div>
 		{/if} -->
 
-		{#if quizState.currentFrame === 11}
+		{#if quizState.currentFrame === 10}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -652,7 +586,7 @@
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 12}
+		{#if quizState.currentFrame === 11}
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
@@ -661,77 +595,12 @@
 						<div class="archetype-description">
 							{ARCHETYPE_DESCRIPTIONS[quizState.archetype || ''] || 'placeholder description'}
 						</div>
-						<button class="btn-primary" onclick={nextFrame}>Next</button>
-					</div>
-					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(14, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(14, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(14, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(14, 4)} alt="4"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
-
-		{#if quizState.currentFrame === 13}
-			<div class="frame">
-				<div class="frame-card">
-					<div class="quiz-left">
-						<h2>What does this mean?</h2>
-						<p class="placeholder">placeholder description</p>
-						<div class="nav-actions">
-							<button class="btn-secondary" onclick={prevFrame}>Back</button>
-							<button class="btn-primary" onclick={nextFrame}>Next</button>
-						</div>
-					</div>
-					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(15, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(15, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(15, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(15, 4)} alt="4"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
-
-		{#if quizState.currentFrame === 14}
-			<div class="frame">
-				<div class="frame-card">
-					<div class="quiz-left">
-						<h2>How did we get here?</h2>
-						<p class="placeholder">placeholder description</p>
-						<div class="nav-actions">
-							<button class="btn-secondary" onclick={prevFrame}>Back</button>
-							<button class="btn-primary" onclick={nextFrame}>Next</button>
-						</div>
-					</div>
-					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(16, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(16, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(16, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(16, 4)} alt="4"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
-
-		{#if quizState.currentFrame === 15}
-			<div class="frame">
-				<div class="frame-card">
-					<div class="quiz-left">
-						<h2>What did we find?</h2>
 						
 						<div class="filter-section">
 							<label for="meal-filter">Filter by meal time:</label>
 							<select id="meal-filter" bind:value={selectedMealFilter} onchange={loadAggregateData}>
 								<option value="All">All Meals</option>
-								{#each MEAL_OPTIONS as meal}
+								{#each availableMeals as meal}
 									<option value={meal}>{meal}</option>
 								{/each}
 							</select>
@@ -748,17 +617,14 @@
 							</p>
 						{/if}
 
-						<div class="results-actions">
-							<button class="btn-secondary" onclick={prevFrame}>Back</button>
-							<button class="btn-primary" onclick={restartQuiz}>Take Quiz Again</button>
-						</div>
+						<button class="btn-primary" onclick={restartQuiz}>Take Quiz Again</button>
 					</div>
 					<div class="quiz-right">
 						<div class="picture-container picture-layout-4">
-							<div class="picture-frame"><img src={getPictureSrc(17, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(17, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(17, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(17, 4)} alt="4"></div>
+							<div class="picture-frame"><img src="/rusher.jpg" alt="1"></div>
+							<div class="picture-frame"><img src="/iPad_Kid.jpg" alt="2"></div>
+							<div class="picture-frame"><img src="/laptop.jpg" alt="3"></div>
+							<div class="picture-frame"><img src="/group_hangout.jpg" alt="4"></div>
 						</div>
 					</div>
 				</div>

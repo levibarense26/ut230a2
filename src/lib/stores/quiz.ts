@@ -1,5 +1,9 @@
 import { writable, derived } from 'svelte/store';
 
+export const MEDIUM_OCCUPANCY_DISABLED = ['bench-11', 'bench-13', 'bench-14', 'bench-19', 'bench-6', 'bench-5', 'bench-2', 'chair-2', 'chair-7', 'chair-4', 'chair-5', 'chair-10', 'chair-20', 'chair-16', 'chair-6', 'chair-24', 'chair-25', 'chair-30', 'chair-27', 'chair-35', 'chair-37', 'chair-31'] as const;
+
+export const LOW_OCCUPANCY_DISABLED = ['chair-3', 'bench-1', 'bench-2', 'bench-5', 'bench-6', 'bench-8', 'bench-10', 'chair-37', 'chair-38', 'chair-40', 'chair-35', 'chair-31', 'chair-33', 'chair-26', 'chair-22', 'chair-24', 'chair-25', 'chair-30', 'chair-29', 'chair-19', 'chair-20', 'chair-13', 'chair-11', 'chair-17', 'chair-16', 'chair-6', 'chair-9', 'chair-15', 'chair-10', 'chair-5'] as const;
+
 export interface PlacedSeat {
 	id: string;
 	type: 'chair' | 'bench';

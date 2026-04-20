@@ -4,12 +4,14 @@
 		height = 520,
 		selectedSeat = null as { id: string; type: string } | null,
 		occupancy = 'low' as 'low' | 'medium' | 'high',
+		disabledSeats = [] as readonly string[] | string[],
 		onSelect = (_seat: { id: string; type: string }) => {}
 	}: {
 		width?: number;
 		height?: number;
 		selectedSeat: { id: string; type: string } | null;
 		occupancy?: 'low' | 'medium' | 'high';
+		disabledSeats?: readonly string[] | string[];
 		onSelect?: (seat: { id: string; type: string }) => void;
 	} = $props();
 
@@ -97,6 +99,7 @@
 		const target = e.target as SVGElement;
 		const id = target.id;
 		if (id && (id.startsWith('chair-') || id.startsWith('bench-'))) {
+			if (disabledSeats.includes(id)) return;
 			const type = id.startsWith('chair-') ? 'chair' : 'bench';
 			selectedSeat = { id, type };
 			onSelect({ id, type });
@@ -166,15 +169,6 @@
 <svelte:window onmousemove={handleDrag} onmouseup={handleDragEnd} />
 
 <div class="seat-map-container">
-	<div class="controls">
-		<button class="edit-btn" class:active={editMode} onclick={() => editMode = !editMode}>
-			{editMode ? 'Done Editing' : 'Edit Positions'}
-		</button>
-		{#if editMode}
-			<button class="export-btn" onclick={exportPositions}>Export to Console</button>
-		{/if}
-	</div>
-	
 	<div class="map-wrapper">
 		<svg
 			{width}
@@ -194,6 +188,7 @@
 						id={seat.id}
 						class="seat {seat.type}"
 						class:selected={selectedSeat?.id === seat.id}
+						class:disabled={disabledSeats.includes(seat.id)}
 						class:hovered={hoveredId === seat.id}
 						class:dragging={draggingId === seat.id}
 						class:edit-mode={editMode}
@@ -309,6 +304,13 @@
 	.seat.bench.selected {
 		fill: #81c784;
 		stroke: #4caf50;
+	}
+
+	.seat.disabled {
+		fill: #ff4444 !important;
+		stroke: #cc0000 !important;
+		stroke-width: 2;
+		cursor: not-allowed;
 	}
 
 	.hint {

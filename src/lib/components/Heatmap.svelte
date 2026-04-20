@@ -80,16 +80,15 @@
 	];
 
 	const archetypeColors: Record<string, string> = {
-		'The Social Hub': '#E91E63',
-		'The Quiet Corner': '#9C27B0',
-		'The Focus Zone': '#3F51B5',
-		'The Explorer': '#00BCD4',
-		'The Regular': '#4CAF50',
-		'The Wanderer': '#FF9800',
-		'The Commuter': '#795548',
+		'Rusher': '#E91E63',
+		'Unicorn': '#9C27B0',
+		'iPad Kid': '#3F51B5',
+		'Group Hangout': '#00BCD4',
+		'My Way': '#4CAF50',
+		
 	};
 
-	const defaultArchetypes = ['The Social Hub', 'The Quiet Corner', 'The Focus Zone', 'The Explorer', 'The Regular', 'The Wanderer', 'The Commuter'];
+	const defaultArchetypes = ['Rusher', 'Unicorn', 'iPad Kid', 'Group Hangout', 'My Way'];
 
 	let archetypeData = $state<Map<string, SeatCount[]>>(new Map());
 	let maxCount = $state(1);
