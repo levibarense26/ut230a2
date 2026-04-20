@@ -79,7 +79,10 @@
 		}
 
 		const imageData = overlayCtx.createImageData(width, height);
-		const maxVal = Math.max(...heatData);
+		let maxVal = 0;
+		for (let i = 0; i < heatData.length; i++) {
+			if (heatData[i] > maxVal) maxVal = heatData[i];
+		}
 
 		for (let i = 0; i < heatData.length; i++) {
 			const intensity = maxVal > 0 ? heatData[i] / maxVal : 0;
@@ -113,13 +116,12 @@
 	function render() {
 		if (!ready) return;
 		drawImage();
-		drawHeatmap();
 	}
 
 	$effect(() => {
 		if (ctx && overlayCtx) {
 			ready = true;
-			render();
+			drawImage();
 		}
 	});
 
@@ -143,7 +145,6 @@
 			if (ctx && overlayCtx) {
 				ready = true;
 			}
-			render();
 		};
 		img.onerror = () => {
 			console.error('Failed to load seating-map-low.png');

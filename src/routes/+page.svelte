@@ -207,6 +207,10 @@
 		isDragging = false;
 		sliderValue = 0;
 	}
+
+	function getPictureSrc(frameNum: number, picNum: number): string {
+		return `/frame-${frameNum}.jpg`;
+	}
 </script>
 
 <svelte:head>
@@ -218,167 +222,315 @@
 	
 	<div class="container">
 		{#if quizState.currentFrame === 1}
-			<div class="frame frame-title">
-				<h1>Why do people go to the dining hall</h1>
-				<p class="subtitle">Discover your dining hall archetype</p>
-				<div 
-					class="swipe-slider"
-					bind:this={sliderTrack}
-					onmousedown={handleSliderStart}
-					ontouchstart={handleSliderStart}
-				>
-					<div class="slider-track">
-						<div class="slider-fill" style="width: {sliderValue * 100}%"></div>
-						<div class="slider-thumb" style="left: {sliderValue * 100}%">
-							<svg viewBox="0 0 80 50" width="80" height="50" xmlns="http://www.w3.org/2000/svg">
-								<foreignObject width="100%" height="100%">
-									<img src="/swipe-icon.jpg" alt="swipe" xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;pointer-events:none;" />
-								</foreignObject>
-							</svg>
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h1>Why do people go to the dining hall</h1>
+						<p class="subtitle">Discover your dining hall archetype</p>
+						<div 
+							class="swipe-slider"
+							bind:this={sliderTrack}
+							onmousedown={handleSliderStart}
+							ontouchstart={handleSliderStart}
+						>
+							<div class="slider-track">
+								<div class="slider-fill" style="width: {sliderValue * 100}%"></div>
+								<div class="slider-thumb" style="left: {sliderValue * 100}%">
+									<svg viewBox="0 0 80 50" width="80" height="50" xmlns="http://www.w3.org/2000/svg">
+										<foreignObject width="100%" height="100%">
+											<img src="/swipe-icon.jpg" alt="swipe" xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;pointer-events:none;" />
+										</foreignObject>
+									</svg>
+								</div>
+							</div>
+							<span class="slider-hint">Swipe to continue</span>
 						</div>
 					</div>
-					<span class="slider-hint">Swipe to continue</span>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(1, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(1, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(1, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(1, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 2}
 			<div class="frame">
-				<h2>Give viewers student empathy</h2>
-				<p class="placeholder">Context content here</p>
-				<div class="nav-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button class="btn-primary" onclick={nextFrame}>Next</button>
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>Give viewers student empathy</h2>
+						<p class="placeholder">Context content here</p>
+						<div class="nav-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button class="btn-primary" onclick={nextFrame}>Next</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(2, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(2, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(2, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(2, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 3}
 			<div class="frame">
-				<p class="context">placeholder</p>
-				<h2>What meal are you eating?</h2>
-				<div class="options">
-					{#each MEAL_OPTIONS as meal}
-						<button 
-							class="btn-option" 
-							class:selected={quizState.mealTime === meal}
-							onclick={() => selectMeal(meal)}
-						>
-							{meal}
-						</button>
-					{/each}
+				<div class="frame-card">
+					<div class="quiz-left">
+						<p class="context">placeholder</p>
+						<h2>What meal are you eating?</h2>
+						<div class="options">
+							{#each MEAL_OPTIONS as meal}
+								<button 
+									class="btn-option" 
+									class:selected={quizState.mealTime === meal}
+									onclick={() => selectMeal(meal)}
+								>
+									{meal}
+								</button>
+							{/each}
+						</div>
+						<button class="btn-back" onclick={prevFrame}>Back</button>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(3, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(3, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(3, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(3, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
-				<button class="btn-back" onclick={prevFrame}>Back</button>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 4}
 			<div class="frame">
-				<p class="context">placeholder</p>
-				<h2>Who are you eating with?</h2>
-				<div class="options">
-					{#each GROUP_OPTIONS as group}
-						<button 
-							class="btn-option" 
-							class:selected={quizState.groupSize === group}
-							onclick={() => selectGroup(group)}
-						>
-							{group}
-						</button>
-					{/each}
+				<div class="frame-card">
+					<div class="quiz-left">
+						<p class="context">placeholder</p>
+						<h2>Who are you eating with?</h2>
+						<div class="options">
+							{#each GROUP_OPTIONS as group}
+								<button 
+									class="btn-option" 
+									class:selected={quizState.groupSize === group}
+									onclick={() => selectGroup(group)}
+								>
+									{group}
+								</button>
+							{/each}
+						</div>
+						<button class="btn-back" onclick={prevFrame}>Back</button>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(4, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(4, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(4, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(4, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
-				<button class="btn-back" onclick={prevFrame}>Back</button>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 5}
 			<div class="frame">
-				<p class="context">placeholder</p>
-				<h2>Where do you go in the dining hall first?</h2>
-				<div class="options">
-					{#each PRIORITY_OPTIONS as priority}
-						<button 
-							class="btn-option" 
-							class:selected={quizState.priority === priority}
-							onclick={() => selectPriority(priority)}
-						>
-							{priority}
-						</button>
-					{/each}
+				<div class="frame-card">
+					<div class="quiz-left">
+						<p class="context">placeholder</p>
+						<h2>Where do you go in the dining hall first?</h2>
+						<div class="options">
+							{#each PRIORITY_OPTIONS as priority}
+								<button 
+									class="btn-option" 
+									class:selected={quizState.priority === priority}
+									onclick={() => selectPriority(priority)}
+								>
+									{priority}
+								</button>
+							{/each}
+						</div>
+						<button class="btn-back" onclick={prevFrame}>Back</button>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(5, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(5, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(5, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(5, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
-				<button class="btn-back" onclick={prevFrame}>Back</button>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 6}
 			<div class="frame">
-				<p class="context">placeholder</p>
-				<h2>What are you going to do in your seat?</h2>
-				<div class="options">
-					{#each IMMERSION_OPTIONS as immersion}
-						<button 
-							class="btn-option" 
-							class:selected={quizState.immersion === immersion}
-							onclick={() => selectImmersion(immersion)}
-						>
-							{immersion}
-						</button>
-					{/each}
+				<div class="frame-card">
+					<div class="quiz-left">
+						<p class="context">placeholder</p>
+						<h2>What are you going to do in your seat?</h2>
+						<div class="options">
+							{#each IMMERSION_OPTIONS as immersion}
+								<button 
+									class="btn-option" 
+									class:selected={quizState.immersion === immersion}
+									onclick={() => selectImmersion(immersion)}
+								>
+									{immersion}
+								</button>
+							{/each}
+						</div>
+						<button class="btn-back" onclick={prevFrame}>Back</button>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(6, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(6, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(6, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(6, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
-				<button class="btn-back" onclick={prevFrame}>Back</button>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 7}
 			<div class="frame">
-				<h2>General view of the section</h2>
-				<p class="placeholder">Section overview content here</p>
-				<div class="nav-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button class="btn-primary" onclick={nextFrame}>Next</button>
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>General view of the section</h2>
+						<p class="placeholder">Section overview content here</p>
+						<div class="nav-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button class="btn-primary" onclick={nextFrame}>Next</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(7, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(7, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(7, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(7, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 8}
-			<div class="frame frame-map">
-				<h2>Select the seat you typically take</h2>
-				<p class="context">Low occupancy</p>
-				<SeatMap 
-					width={438}
-					height={347}
-					selectedSeat={quizState.map1Seat}
-					occupancy="low"
-					onSelect={handleMap1Select}
-				/>
-				<div class="map-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button 
-						class="btn-primary" 
-						disabled={!quizState.map1Seat}
-						onclick={nextFrame}
-					>
-						Next
-					</button>
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>Select the seat you typically take</h2>
+						<p class="context">Low occupancy</p>
+						<SeatMap 
+							width={200}
+							height={160}
+							selectedSeat={quizState.map1Seat}
+							occupancy="low"
+							onSelect={handleMap1Select}
+						/>
+						<div class="map-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button 
+								class="btn-primary" 
+								disabled={!quizState.map1Seat}
+								onclick={nextFrame}
+							>
+								Next
+							</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(8, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(8, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(8, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(8, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 9}
-			<div class="frame frame-popup">
-				<div class="popup">
-					<h3>Length of stay</h3>
-					<p class="popup-context">placeholder description</p>
-					<div class="options">
-						{#each DWELLING_OPTIONS as dwelling}
+{#if quizState.currentFrame === 9}
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>Select the seat you typically take</h2>
+						<p class="context">Medium occupancy</p>
+<SeatMap 
+					width={300}
+					height={240}
+					selectedSeat={quizState.map2Seat}
+					occupancy="medium"
+					onSelect={handleMap2Select}
+				/>
+						<div class="map-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
 							<button 
-								class="btn-option" 
-								class:selected={quizState.dwelling1 === dwelling}
-								onclick={() => selectDwelling1(dwelling)}
+								class="btn-primary" 
+								disabled={!quizState.map2Seat}
+								onclick={nextFrame}
 							>
-								{dwelling}
+								Next
 							</button>
-						{/each}
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(9, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(9, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(9, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(9, 4)} alt="4"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{/if}
+
+		{#if quizState.currentFrame === 10}
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>Select the seat you typically take</h2>
+						<p class="context">High occupancy</p>
+						<SeatMap 
+							width={200}
+							height={160}
+							selectedSeat={quizState.map3Seat}
+							occupancy="high"
+							onSelect={handleMap3Select}
+						/>
+						<div class="map-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button 
+								class="btn-primary" 
+								disabled={!quizState.map3Seat}
+								onclick={nextFrame}
+							>
+								Next
+							</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(10, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(10, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(10, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(10, 4)} alt="4"></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -388,12 +540,12 @@
 			<div class="frame frame-map">
 				<h2>Select the seat you typically take</h2>
 				<p class="context">Moderate occupancy</p>
-				<SeatMap 
-					width={438}
-					height={347}
-					selectedSeat={quizState.map2Seat}
-					occupancy="medium"
-					onSelect={handleMap2Select}
+<SeatMap 
+					width={300}
+					height={240}
+					selectedSeat={quizState.map1Seat}
+					occupancy="low"
+					onSelect={handleMap1Select}
 				/>
 				<div class="map-actions">
 					<button class="btn-secondary" onclick={prevFrame}>Back</button>
@@ -408,122 +560,203 @@
 			</div>
 		{/if}
 
-		{#if quizState.currentFrame === 11}
-			<div class="frame frame-popup">
-				<div class="popup">
-					<h3>Length of stay</h3>
-					<p class="popup-context">placeholder description</p>
-					<div class="options">
-						{#each DWELLING_OPTIONS as dwelling}
-							<button 
-								class="btn-option" 
-								class:selected={quizState.dwelling2 === dwelling}
-								onclick={() => selectDwelling2(dwelling)}
-							>
-								{dwelling}
-							</button>
-						{/each}
+{#if quizState.currentFrame === 11}
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<p class="context">placeholder</p>
+						<h2>Where do you live?</h2>
+						<div class="options">
+							{#each DWELLING_OPTIONS as dwelling}
+								<button 
+									class="btn-option" 
+									class:selected={quizState.dwelling1 === dwelling}
+									onclick={() => selectDwelling1(dwelling)}
+								>
+									{dwelling}
+								</button>
+							{/each}
+						</div>
+						<button class="btn-back" onclick={prevFrame}>Back</button>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(11, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(11, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(11, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(11, 4)} alt="4"></div>
+						</div>
 					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 12}
-			<div class="frame frame-map">
-				<h2>Select the seat you typically take</h2>
-				<p class="context">High occupancy</p>
-				<SeatMap 
-					width={438}
-					height={347}
-					selectedSeat={quizState.map3Seat}
-					occupancy="high"
-					onSelect={handleMap3Select}
-				/>
-				<div class="map-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button 
-						class="btn-primary" 
-						disabled={!quizState.map3Seat}
-						onclick={nextFrame}
-					>
-						Next
-					</button>
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>Select the seat you typically take</h2>
+						<p class="context">High occupancy</p>
+						<SeatMap 
+							width={200}
+							height={160}
+							selectedSeat={quizState.map3Seat}
+							occupancy="high"
+							onSelect={handleMap3Select}
+						/>
+						<div class="map-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button 
+								class="btn-primary" 
+								disabled={!quizState.map3Seat}
+								onclick={nextFrame}
+							>
+								Next
+							</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(12, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(12, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(12, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(12, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 13}
-			<div class="frame frame-popup">
-				<div class="popup">
-					<h3>Reveal Archetype</h3>
-					<button class="btn-primary btn-large" onclick={nextFrame}>
-						Reveal Your Archetype
-					</button>
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h3>Reveal Archetype</h3>
+						<button class="btn-primary btn-large" onclick={nextFrame}>
+							Reveal Your Archetype
+						</button>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(13, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(13, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(13, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(13, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 14}
-			<div class="frame frame-reveal">
-				<h2>You're a...</h2>
-				<div class="archetype-name">{quizState.archetype}</div>
-				<div class="archetype-description">
-					{ARCHETYPE_DESCRIPTIONS[quizState.archetype || ''] || 'placeholder description'}
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>You're a...</h2>
+						<div class="archetype-name">{quizState.archetype}</div>
+						<div class="archetype-description">
+							{ARCHETYPE_DESCRIPTIONS[quizState.archetype || ''] || 'placeholder description'}
+						</div>
+						<button class="btn-primary" onclick={nextFrame}>Next</button>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(14, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(14, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(14, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(14, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
-				<button class="btn-primary" onclick={nextFrame}>Next</button>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 15}
 			<div class="frame">
-				<h2>What does this mean?</h2>
-				<p class="placeholder">placeholder description</p>
-				<div class="nav-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button class="btn-primary" onclick={nextFrame}>Next</button>
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>What does this mean?</h2>
+						<p class="placeholder">placeholder description</p>
+						<div class="nav-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button class="btn-primary" onclick={nextFrame}>Next</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(15, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(15, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(15, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(15, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 16}
 			<div class="frame">
-				<h2>How did we get here?</h2>
-				<p class="placeholder">placeholder description</p>
-				<div class="nav-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button class="btn-primary" onclick={nextFrame}>Next</button>
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>How did we get here?</h2>
+						<p class="placeholder">placeholder description</p>
+						<div class="nav-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button class="btn-primary" onclick={nextFrame}>Next</button>
+						</div>
+					</div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(16, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(16, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(16, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(16, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
 		{#if quizState.currentFrame === 17}
-			<div class="frame frame-results">
-				<h2>What did we find?</h2>
-				
-				<div class="filter-section">
-					<label for="meal-filter">Filter by meal time:</label>
-					<select id="meal-filter" bind:value={selectedMealFilter} onchange={loadAggregateData}>
-						<option value="All">All Meals</option>
-						{#each MEAL_OPTIONS as meal}
-							<option value={meal}>{meal}</option>
-						{/each}
-					</select>
-				</div>
+			<div class="frame">
+				<div class="frame-card">
+					<div class="quiz-left">
+						<h2>What did we find?</h2>
+						
+						<div class="filter-section">
+							<label for="meal-filter">Filter by meal time:</label>
+							<select id="meal-filter" bind:value={selectedMealFilter} onchange={loadAggregateData}>
+								<option value="All">All Meals</option>
+								{#each MEAL_OPTIONS as meal}
+									<option value={meal}>{meal}</option>
+								{/each}
+							</select>
+						</div>
 
-				{#if loading}
-					<p>Loading aggregate data...</p>
-				{:else}
-					<div class="heatmap-container">
-						<Heatmap seats={aggregateData} width={438} height={347} previewMode={aggregateData.length === 0} />
+						{#if loading}
+							<p>Loading aggregate data...</p>
+						{:else}
+							<div class="heatmap-container">
+								<Heatmap seats={aggregateData} width={200} height={160} previewMode={aggregateData.length === 0} />
+							</div>
+							<p class="stats">
+								Showing {aggregateData.length} seat selections from {Math.ceil(aggregateData.length / 3)} submissions
+							</p>
+						{/if}
+
+						<div class="results-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button class="btn-primary" onclick={restartQuiz}>Take Quiz Again</button>
+						</div>
 					</div>
-					<p class="stats">
-						Showing {aggregateData.length} seat selections from {Math.ceil(aggregateData.length / 3)} submissions
-					</p>
-				{/if}
-
-				<div class="results-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button class="btn-primary" onclick={restartQuiz}>Take Quiz Again</button>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(17, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(17, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(17, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(17, 4)} alt="4"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
@@ -557,13 +790,144 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 2rem;
+		padding: 0;
+		width: 100%;
+		height: 100vh;
+		overflow: hidden;
 	}
 
 	.frame {
-		text-align: center;
-		max-width: 700px;
 		width: 100%;
+		max-width: 100%;
+		padding: 0;
+		height: 100vh;
+	}
+
+.frame-card {
+		background: white;
+		border-radius: 12px;
+		padding: 24px;
+		display: flex;
+		flex-direction: row;
+		gap: 16px;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		max-width: 100%;
+		height: 100vh;
+		box-sizing: border-box;
+	}
+
+	.quiz-left {
+		background: #e0e0e0;
+		border-radius: 8px;
+		flex: 0 0 30%;
+		height: 100%;
+		max-height: 80vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+		overflow: auto;
+		min-height: 100vh;
+		width: 100%;
+	}
+
+	.quiz-left {
+		width: 100%;
+		background: #e0e0e0;
+		border-radius: 8px;
+		min-height: 250px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+	}
+
+	.quiz-right {
+		flex: 0 0 50%;
+		background: #e0e0e0;
+		border-radius: 8px;
+		height: 100%;
+		max-height: 80vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+		overflow: hidden;
+	}
+
+	.picture-container {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		justify-content: center;
+		align-content: center;
+	}
+
+	.picture-frame {
+		background: #ccc;
+		border-radius: 4px;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.picture-frame img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.picture-layout-single .picture-frame {
+		width: 100%;
+		height: 100%;
+	}
+
+	.picture-layout-2-h {
+		flex-direction: row;
+	}
+	.picture-layout-2-h .picture-frame {
+		width: calc(50% - 4px);
+		height: 100%;
+	}
+
+	.picture-layout-2-v {
+		flex-direction: column;
+	}
+	.picture-layout-2-v .picture-frame {
+		width: 100%;
+		height: calc(50% - 4px);
+	}
+
+	.picture-layout-3 {
+		flex-direction: column;
+	}
+	.picture-layout-3 .picture-frame:first-child {
+		width: 100%;
+		height: calc(50% - 4px);
+	}
+	.picture-layout-3 .picture-row {
+		width: 100%;
+		height: calc(50% - 4px);
+		display: flex;
+		gap: 8px;
+	}
+	.picture-layout-3 .picture-row .picture-frame {
+		flex: 1;
+		height: 100%;
+	}
+
+	.picture-layout-4 {
+		flex-wrap: wrap;
+	}
+	.picture-layout-4 .picture-frame {
+		width: calc(50% - 4px);
+		height: calc(50% - 4px);
 	}
 
 	.frame-title h1 {
