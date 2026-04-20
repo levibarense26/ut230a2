@@ -29,6 +29,41 @@ export interface AggregateData {
 	submissions: Submission[];
 }
 
+export async function getSubmissionsByFilter(
+	mealTime: string | null, 
+	filterType: string | null, 
+	filterValue: string | null
+): Promise<AggregateData> {
+	const db = getSql();
+	let query = 'SELECT * FROM submissions';
+	const conditions: string[] = [];
+	const params: (string | null)[] = [];
+
+	if (mealTime) {
+		conditions.push('meal_time = $' + (params.length + 1));
+		params.push(mealTime);
+	}
+
+	if (filterType && filterValue) {
+		conditions.push(`${filterType} = $` + (params.length + 1));
+		params.push(filterValue);
+	}
+
+	if (conditions.length > 0) {
+		query += ' WHERE ' + conditions.join(' AND ');
+	}
+
+	const rows = await db(query, ...params) as Record<string, any>[];
+	return {
+		submissions: rows.map((row) => ({
+			...row,
+			map1_seat: row.map1_seat,
+			map2_seat: row.map2_seat,
+			map3_seat: row.map3_seat
+		})) as Submission[]
+	};
+}
+
 export async function saveSubmission(data: Submission): Promise<number> {
 	const db = getSql();
 	const result = await db`

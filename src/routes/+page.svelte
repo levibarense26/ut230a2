@@ -152,23 +152,44 @@
 		quizStore.reset();
 	}
 
-	let aggregateData: { x: number; y: number }[] = $state([]);
+	let aggregateData: ({ id: string; type: string; archetype?: string; dwelling_time?: string; activity?: string } | { x: number; y: number })[] = $state([]);
 	let selectedMealFilter = $state('All');
+	let dataMode = $state('submissions');
 	let loading = $state(true);
 
 	async function loadAggregateData() {
 		try {
-			const url = selectedMealFilter === 'All' 
-				? '/api/aggregate' 
-				: `/api/aggregate?meal_time=${selectedMealFilter}`;
+			const mealParam = selectedMealFilter === 'All' ? '' : `meal_time=${selectedMealFilter}`;
+			const url = mealParam ? `/api/aggregate?${mealParam}&data_mode=${dataMode}` : `/api/aggregate?data_mode=${dataMode}`;
 			const res = await fetch(url);
 			const data = await res.json();
-			aggregateData = data.submissions?.flatMap((s: any) => [s.map1_seat, s.map2_seat, s.map3_seat]) || [];
+			
+			
+			
+			const key = dataMode === 'observations' ? 'observations' : 'submissions';
+			const raw = data[key] || [];
+			
+			
+			aggregateData = raw.flatMap((s: any) => {
+				const seat1 = typeof s.map1_seat === 'string' ? JSON.parse(s.map1_seat) : s.map1_seat;
+				const seat2 = typeof s.map2_seat === 'string' ? JSON.parse(s.map2_seat) : s.map2_seat;
+				const seat3 = typeof s.map3_seat === 'string' ? JSON.parse(s.map3_seat) : s.map3_seat;
+				return [
+					{ ...seat1, archetype: s.archetype, dwelling_time: s.dwelling1, activity: s.immersion },
+					{ ...seat2, archetype: s.archetype, dwelling_time: s.dwelling1, activity: s.immersion },
+					{ ...seat3, archetype: s.archetype, dwelling_time: s.dwelling1, activity: s.immersion }
+				];
+			});
 			loading = false;
 		} catch (err) {
 			console.error('Failed to load aggregate data:', err);
 			loading = false;
 		}
+	}
+
+	function handleDataModeChange(mode: string) {
+		dataMode = mode;
+		loadAggregateData();
 	}
 
 	$effect(() => {
@@ -700,7 +721,7 @@
 							<p>Loading aggregate data...</p>
 						{:else}
 							<div class="heatmap-container">
-								<Heatmap seats={aggregateData} width={400} height={380} previewMode={aggregateData.length === 0} />
+								<Heatmap seats={aggregateData} width={400} height={380} previewMode={aggregateData.length === 0} dataMode={dataMode} onDataModeChange={handleDataModeChange} />
 							</div>
 							<p class="stats">
 								Showing {aggregateData.length} seat selections from {Math.ceil(aggregateData.length / 3)} submissions

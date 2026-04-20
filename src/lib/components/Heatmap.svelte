@@ -1,12 +1,26 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
-	let { seats = [], width = 400, height = 380, previewMode = false }: {
-		seats: ({ id: string; type: string } | { x: number; y: number })[];
+	let { 
+		seats = [], 
+		width = 400, 
+		height = 380, 
+		previewMode = false,
+		mealFilter = 'All',
+		dataMode = 'submissions',
+		onMealFilterChange = (_filter: string) => {},
+		onDataModeChange = (_mode: string) => {}
+	}: {
+		seats: ({ id: string; type: string; archetype?: string; dwelling_time?: string; activity?: string })[];
 		width?: number;
 		height?: number;
 		previewMode?: boolean;
+		mealFilter?: string;
+		dataMode?: string;
+		onMealFilterChange?: (filter: string) => void;
+		onDataModeChange?: (mode: string) => void;
 	} = $props();
+
+	type ColorMode = 'archetype' | 'dwelling' | 'activity';
+	let colorMode = $state<ColorMode>('archetype');
 
 	interface SeatCount {
 		id: string;
@@ -14,9 +28,10 @@
 		x: number;
 		y: number;
 		count: number;
+		value: string;
 	}
 
-	const seatPositions: Omit<SeatCount, 'count'>[] = [
+	const seatPositions: { id: string; x: number; y: number; type: 'chair' | 'bench' }[] = [
 		{ id: 'bench-1', x: 44, y: 99, type: 'bench' },
 		{ id: 'bench-2', x: 48, y: 146, type: 'bench' },
 		{ id: 'bench-3', x: 46, y: 167, type: 'bench' },
@@ -80,56 +95,104 @@
 	];
 
 	const archetypeColors: Record<string, string> = {
-		'The Social Hub': '#E91E63',
-		'The Quiet Corner': '#9C27B0',
-		'The Focus Zone': '#3F51B5',
-		'The Explorer': '#00BCD4',
-		'The Regular': '#4CAF50',
-		'The Wanderer': '#FF9800',
-		'The Commuter': '#795548',
+		'iPad Kid': '#E91E63',
+		'Rusher': '#9C27B0',
+		'My Way': '#3F51B5',
+		'Group Hangout': '#00BCD4',
+		'Unicorn': '#4CAF50',
 	};
 
-	const defaultArchetypes = ['The Social Hub', 'The Quiet Corner', 'The Focus Zone', 'The Explorer', 'The Regular', 'The Wanderer', 'The Commuter'];
+	const dwellingColors: Record<string, string> = {
+		'<15': '#FF9800',
+		'15-30': '#2196F3',
+		'30-45': '#4CAF50',
+		'45+': '#9C27B0',
+	};
 
-	let archetypeData = $state<Map<string, SeatCount[]>>(new Map());
+	const activityColors: Record<string, string> = {
+		'Mobile': '#3F51B5',
+		'Laptop': '#FF9800',
+		'Conversation': '#4CAF50',
+		'Solitude': '#9C27B0',
+	};
+
+	const defaultArchetypes = Object.keys(archetypeColors);
+	const defaultDwellings = Object.keys(dwellingColors);
+	const defaultActivities = Object.keys(activityColors);
+
+	let groupedData = $state<Map<string, SeatCount[]>>(new Map());
 	let maxCount = $state(1);
+	let currentLegend = $state<string[]>([]);
 
-	function getArchetypeColor(archetype: string): string {
-		return archetypeColors[archetype] || '#666666';
+	function getColor(value: string, mode: ColorMode): string {
+		if (mode === 'archetype') return archetypeColors[value] || '#666666';
+		if (mode === 'dwelling') return dwellingColors[value] || '#666666';
+		if (mode === 'activity') return activityColors[value] || '#666666';
+		return '#666666';
 	}
 
 	function processSeats() {
+		
+		
 		const newData = new Map<string, SeatCount[]>();
-		defaultArchetypes.forEach(a => newData.set(a, []));
+		
+		if (colorMode === 'archetype') {
+			defaultArchetypes.forEach(v => newData.set(v, []));
+			currentLegend = defaultArchetypes;
+		} else if (colorMode === 'dwelling') {
+			defaultDwellings.forEach(v => newData.set(v, []));
+			currentLegend = defaultDwellings;
+		} else {
+			defaultActivities.forEach(v => newData.set(v, []));
+			currentLegend = defaultActivities;
+		}
 
 		if (!previewMode && seats.length > 0) {
-			const counts = new Map<string, number>();
+			const counts = new Map<string, { count: number; value: string }[]>();
 			
 			for (const seat of seats) {
 				let id: string;
-				if ('id' in seat && seat.id) {
+				let value: string;
+
+				if ('id' in seat && seat.id && seat.id !== '') {
 					id = seat.id;
+					if (colorMode === 'archetype') value = (seat as any).archetype || 'Unknown';
+					else if (colorMode === 'dwelling') value = (seat as any).dwelling_time || 'Unknown';
+					else value = (seat as any).activity || 'Unknown';
 				} else if ('type' in seat && seat.type) {
 					id = seat.type;
+					value = 'Unknown';
 				} else {
 					const legacySeat = seat as { x: number; y: number };
 					const pos = seatPositions.find(s => 
-						Math.abs(s.x - legacySeat.x * 550) < 20 && 
-						Math.abs(s.y - legacySeat.y * 520) < 20
+						Math.abs(s.x - (legacySeat.x || 0) * 550) < 30 && 
+						Math.abs(s.y - (legacySeat.y || 0) * 520) < 30
 					);
 					id = pos?.id || `seat-${legacySeat.x}-${legacySeat.y}`;
+					value = 'Unknown';
 				}
-				counts.set(id, (counts.get(id) || 0) + 1);
+				
+				
+				
+				const existing = counts.get(id) || [];
+				existing.push({ count: 1, value });
+				counts.set(id, existing);
 			}
 
-			for (const [id, count] of counts) {
+			for (const [id, arr] of counts) {
 				const pos = seatPositions.find(s => s.id === id);
 				if (!pos) continue;
 
-				const archetype = defaultArchetypes[count % defaultArchetypes.length];
-				const existing = newData.get(archetype) || [];
-				existing.push({ ...pos, count });
-				newData.set(archetype, existing);
+				const valueCounts = new Map<string, number>();
+				for (const item of arr) {
+					valueCounts.set(item.value, (valueCounts.get(item.value) || 0) + 1);
+				}
+
+				for (const [value, count] of valueCounts) {
+					const existing = newData.get(value) || [];
+					existing.push({ ...pos, count, value });
+					newData.set(value, existing);
+				}
 			}
 		}
 
@@ -140,7 +203,7 @@
 			}
 		}
 
-		archetypeData = newData;
+		groupedData = newData;
 		maxCount = max;
 	}
 
@@ -157,23 +220,23 @@
 			<rect x="23.5" y="23.5" width="503" height="474" stroke="black" fill="none"/>
 
 			{#if previewMode}
-				{#each seatPositions as pos, i}
+				{#each seatPositions.slice(0, 20) as pos, i}
 					{@const count = (i % 3) + 1}
 					{@const size = 5 + count * 3}
-					{@const color = getArchetypeColor(defaultArchetypes[i % defaultArchetypes.length])}
+					{@const value = defaultArchetypes[i % defaultArchetypes.length]}
 					<circle
 						cx={pos.x + (pos.type === 'bench' ? 39 : 11)}
 						cy={pos.y + 5}
 						r={size}
-						fill={color}
+						fill={getColor(value, 'archetype')}
 						opacity="0.6"
 					/>
 				{/each}
 			{:else}
-				{#each [...archetypeData] as [archetype, seatList]}
+				{#each [...groupedData] as [label, seatList]}
 					{#each seatList as seat}
 						{@const size = 5 + Math.floor((seat.count / maxCount) * 15)}
-						{@const color = getArchetypeColor(archetype)}
+						{@const color = getColor(label, colorMode)}
 						<circle
 							cx={seat.x + (seat.type === 'bench' ? 39 : 11)}
 							cy={seat.y + 5}
@@ -181,7 +244,7 @@
 							fill={color}
 							opacity="0.65"
 						>
-							<title>{archetype}: {seat.count} selections</title>
+							<title>{label}: {seat.count} selections</title>
 						</circle>
 					{/each}
 				{/each}
@@ -190,12 +253,53 @@
 	</div>
 
 	<div class="legend">
-		{#each defaultArchetypes as archetype}
+		{#each currentLegend as item}
 			<div class="legend-item">
-				<span class="legend-dot" style="background: {getArchetypeColor(archetype)}"></span>
-				<span class="legend-label">{archetype}</span>
+				<span class="legend-dot" style="background: {getColor(item, colorMode)}"></span>
+				<span class="legend-label">{item}</span>
 			</div>
 		{/each}
+	</div>
+
+	<div class="data-toggle">
+		<button 
+			class="toggle-btn" 
+			class:active={dataMode === 'submissions'}
+			onclick={() => onDataModeChange('submissions')}
+		>
+			Quiz Data
+		</button>
+		<button 
+			class="toggle-btn" 
+			class:active={dataMode === 'observations'}
+			onclick={() => onDataModeChange('observations')}
+		>
+			Observed Data
+		</button>
+	</div>
+
+	<div class="color-mode-buttons">
+		<button 
+			class="mode-btn" 
+			class:active={colorMode === 'archetype'}
+			onclick={() => colorMode = 'archetype'}
+		>
+			Archetype
+		</button>
+		<button 
+			class="mode-btn" 
+			class:active={colorMode === 'dwelling'}
+			onclick={() => colorMode = 'dwelling'}
+		>
+			Dwelling Time
+		</button>
+		<button 
+			class="mode-btn" 
+			class:active={colorMode === 'activity'}
+			onclick={() => colorMode = 'activity'}
+		>
+			Activity
+		</button>
 	</div>
 </div>
 
@@ -224,7 +328,7 @@
 	.legend {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 12px;
+		gap: 8px;
 		justify-content: center;
 	}
 
@@ -235,13 +339,54 @@
 	}
 
 	.legend-dot {
-		width: 12px;
-		height: 12px;
+		width: 10px;
+		height: 10px;
 		border-radius: 50%;
 	}
 
 	.legend-label {
-		font-size: 12px;
+		font-size: 11px;
 		color: #666;
+	}
+
+	.color-mode-buttons {
+		display: flex;
+		gap: 8px;
+	}
+
+	.mode-btn {
+		padding: 6px 12px;
+		font-size: 12px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		background: white;
+		cursor: pointer;
+	}
+
+	.mode-btn.active {
+		background: #333;
+		color: white;
+		border-color: #333;
+	}
+
+	.data-toggle {
+		display: flex;
+		gap: 8px;
+	}
+
+	.toggle-btn {
+		padding: 8px 16px;
+		font-size: 13px;
+		border: 2px solid #82D5E1;
+		border-radius: 20px;
+		background: white;
+		color: #666;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	.toggle-btn.active {
+		background: #82D5E1;
+		color: white;
 	}
 </style>
