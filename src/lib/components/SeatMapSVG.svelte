@@ -4,19 +4,29 @@
 		height = 520,
 		selectedSeat = null as { id: string; type: string } | null,
 		occupancy = 'low' as 'low' | 'medium' | 'high',
-		onSelect = (_seat: { id: string; type: string }) => {}
+		disabledSeats = [] as string[],
+		onSelect = (_seat: { id: string; type: string }) => {},
+		onDisabledSeatsChange = (_seats: string[]) => {}
 	}: {
 		width?: number;
 		height?: number;
 		selectedSeat: { id: string; type: string } | null;
 		occupancy?: 'low' | 'medium' | 'high';
+		disabledSeats?: string[];
 		onSelect?: (seat: { id: string; type: string }) => void;
+		onDisabledSeatsChange?: (seats: string[]) => void;
 	} = $props();
 
 	let editMode = $state(false);
+	let disableMode = $state(false);
+	let localDisabledSeats = $state<string[]>([...disabledSeats]);
 	let hoveredId = $state<string | null>(null);
 	let draggingId = $state<string | null>(null);
 	let dragOffset = $state({ x: 0, y: 0 });
+
+	$effect(() => {
+		localDisabledSeats = [...disabledSeats];
+	});
 
 	interface SeatPosition {
 		id: string;
@@ -93,14 +103,26 @@
 	}
 
 	function handleSeatClick(e: MouseEvent) {
-		if (editMode) return;
 		const target = e.target as SVGElement;
 		const id = target.id;
-		if (id && (id.startsWith('chair-') || id.startsWith('bench-'))) {
-			const type = id.startsWith('chair-') ? 'chair' : 'bench';
-			selectedSeat = { id, type };
-			onSelect({ id, type });
+		if (!id || (!id.startsWith('chair-') && !id.startsWith('bench-'))) return;
+
+		if (editMode) return;
+		
+		if (disableMode) {
+			if (localDisabledSeats.includes(id)) {
+				localDisabledSeats = localDisabledSeats.filter(s => s !== id);
+			} else {
+				localDisabledSeats = [...localDisabledSeats, id];
+			}
+			onDisabledSeatsChange(localDisabledSeats);
+			return;
 		}
+		
+		if (localDisabledSeats.includes(id)) return;
+		const type = id.startsWith('chair-') ? 'chair' : 'bench';
+		selectedSeat = { id, type };
+		onSelect({ id, type });
 	}
 
 	function handleSeatHover(e: MouseEvent) {
@@ -158,8 +180,10 @@
 		const output = seatPositions.map(s => 
 			`{ id: '${s.id}', x: ${s.x}, y: ${s.y}, type: '${s.type}' }`
 		).join(',\n');
-		console.log('[\n' + output + '\n]');
-		alert('Positions logged to console!');
+		console.log('SEAT POSITIONS:\n[\n' + output + '\n]');
+		console.log('DISABLED SEATS:', localDisabledSeats);
+		console.log('DISABLED SEATS ARRAY:', JSON.stringify(localDisabledSeats));
+		alert('Positions and disabled seats logged to console!');
 	}
 </script>
 
@@ -167,11 +191,14 @@
 
 <div class="seat-map-container">
 	<div class="controls">
-		<button class="edit-btn" class:active={editMode} onclick={() => editMode = !editMode}>
-			{editMode ? 'Done Editing' : 'Edit Positions'}
+		<button class="edit-btn" class:active={editMode} onclick={() => { editMode = !editMode; disableMode = false; }}>
+			{editMode ? 'Done Position' : 'Edit Positions'}
+		</button>
+		<button class="edit-btn" class:active={disableMode} onclick={() => { disableMode = !disableMode; editMode = false; }}>
+			{disableMode ? 'Done' : 'Disable Seats'}
 		</button>
 		{#if editMode}
-			<button class="export-btn" onclick={exportPositions}>Export to Console</button>
+			<button class="export-btn" onclick={exportPositions}>Export</button>
 		{/if}
 	</div>
 	
@@ -194,6 +221,7 @@
 						id={seat.id}
 						class="seat {seat.type}"
 						class:selected={selectedSeat?.id === seat.id}
+						class:disabled={localDisabledSeats.includes(seat.id)}
 						class:hovered={hoveredId === seat.id}
 						class:dragging={draggingId === seat.id}
 						class:edit-mode={editMode}
@@ -309,6 +337,13 @@
 	.seat.bench.selected {
 		fill: #81c784;
 		stroke: #4caf50;
+	}
+
+	.seat.disabled {
+		fill: #ff4444 !important;
+		stroke: #cc0000 !important;
+		stroke-width: 2;
+		cursor: not-allowed;
 	}
 
 	.hint {

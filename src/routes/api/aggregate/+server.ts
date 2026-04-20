@@ -31,9 +31,12 @@ export const GET: RequestHandler = async ({ url }) => {
 			}
 		}
 		
+		const mealRows = tableName === 'submissions' 
+			? await db`SELECT DISTINCT meal_time FROM submissions`
+			: await db`SELECT DISTINCT meal_time FROM observations`;
+		const availableMeals = mealRows.map(r => r.meal_time);
 		
-		
-		return json({ [tableName]: rows });
+		return json({ [tableName]: rows, availableMeals });
 	} catch (error) {
 		console.error('Aggregate error:', error);
 		return json({ error: String(error) }, { status: 500 });

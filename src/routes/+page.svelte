@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { quizStore } from '$lib/stores/quiz';
+	import { quizStore, LOW_OCCUPANCY_DISABLED, MEDIUM_OCCUPANCY_DISABLED } from '$lib/stores/quiz';
 	import { determineArchetype, ARCHETYPE_DESCRIPTIONS, DWELLING_OPTIONS, GROUP_OPTIONS, PRIORITY_OPTIONS, IMMERSION_OPTIONS, MEAL_OPTIONS } from '$lib/archetypes';
 	import SeatMapSVG from '$lib/components/SeatMapSVG.svelte';
 	import Heatmap from '$lib/components/Heatmap.svelte';
@@ -156,19 +156,32 @@
 	let selectedMealFilter = $state('All');
 	let dataMode = $state('submissions');
 	let loading = $state(true);
+	let availableMeals = $state<string[]>([]);
 
 	async function loadAggregateData() {
 		try {
 			const mealParam = selectedMealFilter === 'All' ? '' : `meal_time=${selectedMealFilter}`;
 			const url = mealParam ? `/api/aggregate?${mealParam}&data_mode=${dataMode}` : `/api/aggregate?data_mode=${dataMode}`;
 			const res = await fetch(url);
+			
+			if (!res.ok) {
+				console.error('API error:', res.status);
+				loading = false;
+				return;
+			}
+			
 			const data = await res.json();
 			
+			if (data.error) {
+				console.error('API error:', data.error);
+				loading = false;
+				return;
+			}
 			
+			availableMeals = data.availableMeals || [];
 			
 			const key = dataMode === 'observations' ? 'observations' : 'submissions';
 			const raw = data[key] || [];
-			
 			
 			aggregateData = raw.flatMap((s: any) => {
 				const seat1 = typeof s.map1_seat === 'string' ? JSON.parse(s.map1_seat) : s.map1_seat;
@@ -464,6 +477,7 @@
 							height={380}
 							selectedSeat={quizState.map1Seat}
 							occupancy="low"
+							disabledSeats={LOW_OCCUPANCY_DISABLED}
 							onSelect={handleMap1Select}
 						/>
 						<div class="map-actions">
@@ -500,6 +514,7 @@
 					height={380}
 					selectedSeat={quizState.map2Seat}
 					occupancy="medium"
+					disabledSeats={MEDIUM_OCCUPANCY_DISABLED}
 					onSelect={handleMap2Select}
 				/>
 						<div class="map-actions">
@@ -536,6 +551,10 @@
 							height={380}
 							selectedSeat={quizState.map3Seat}
 							occupancy="high"
+							disabledSeats={[
+								quizState.map1Seat?.id,
+								quizState.map2Seat?.id
+							].filter(Boolean) as string[]}
 							onSelect={handleMap3Select}
 						/>
 						<div class="map-actions">
@@ -711,7 +730,7 @@
 							<label for="meal-filter">Filter by meal time:</label>
 							<select id="meal-filter" bind:value={selectedMealFilter} onchange={loadAggregateData}>
 								<option value="All">All Meals</option>
-								{#each MEAL_OPTIONS as meal}
+								{#each availableMeals as meal}
 									<option value={meal}>{meal}</option>
 								{/each}
 							</select>
