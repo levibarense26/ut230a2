@@ -1,14 +1,19 @@
 import { writable, derived } from 'svelte/store';
 
+export interface PlacedSeat {
+	id: string;
+	type: 'chair' | 'bench';
+}
+
 export interface QuizState {
 	currentFrame: number;
 	mealTime: string | null;
 	groupSize: string | null;
 	priority: string | null;
 	immersion: string | null;
-	map1Seat: { x: number; y: number } | null;
-	map2Seat: { x: number; y: number } | null;
-	map3Seat: { x: number; y: number } | null;
+	map1Seat: PlacedSeat | null;
+	map2Seat: PlacedSeat | null;
+	map3Seat: PlacedSeat | null;
 	dwelling1: string | null;
 	dwelling2: string | null;
 	archetype: string | null;
@@ -39,9 +44,9 @@ function createQuizStore() {
 		setGroupSize: (value: string) => update((s) => ({ ...s, groupSize: value })),
 		setPriority: (value: string) => update((s) => ({ ...s, priority: value })),
 		setImmersion: (value: string) => update((s) => ({ ...s, immersion: value })),
-		setMap1Seat: (seat: { x: number; y: number }) => update((s) => ({ ...s, map1Seat: seat })),
-		setMap2Seat: (seat: { x: number; y: number }) => update((s) => ({ ...s, map2Seat: seat })),
-		setMap3Seat: (seat: { x: number; y: number }) => update((s) => ({ ...s, map3Seat: seat })),
+		setMap1Seat: (seat: PlacedSeat) => update((s) => ({ ...s, map1Seat: seat })),
+		setMap2Seat: (seat: PlacedSeat) => update((s) => ({ ...s, map2Seat: seat })),
+		setMap3Seat: (seat: PlacedSeat) => update((s) => ({ ...s, map3Seat: seat })),
 		setDwelling1: (value: string) => update((s) => ({ ...s, dwelling1: value })),
 		setDwelling2: (value: string) => update((s) => ({ ...s, dwelling2: value })),
 		setArchetype: (value: string) => update((s) => ({ ...s, archetype: value })),

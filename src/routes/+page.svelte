@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { quizStore } from '$lib/stores/quiz';
 	import { determineArchetype, ARCHETYPE_DESCRIPTIONS, DWELLING_OPTIONS, GROUP_OPTIONS, PRIORITY_OPTIONS, IMMERSION_OPTIONS, MEAL_OPTIONS } from '$lib/archetypes';
-	import SeatMap from '$lib/components/SeatMap.svelte';
+	import SeatMapSVG from '$lib/components/SeatMapSVG.svelte';
 	import Heatmap from '$lib/components/Heatmap.svelte';
 	import type { QuizState } from '$lib/stores/quiz';
 
@@ -100,16 +100,16 @@
 		nextFrame();
 	}
 
-	function handleMap1Select(seat: { x: number; y: number }) {
-		quizStore.setMap1Seat(seat);
+	function handleMap1Select(seat: { id: string; type: string }) {
+		quizStore.setMap1Seat(seat as any);
 	}
 
-	function handleMap2Select(seat: { x: number; y: number }) {
-		quizStore.setMap2Seat(seat);
+	function handleMap2Select(seat: { id: string; type: string }) {
+		quizStore.setMap2Seat(seat as any);
 	}
 
-	function handleMap3Select(seat: { x: number; y: number }) {
-		quizStore.setMap3Seat(seat);
+	function handleMap3Select(seat: { id: string; type: string }) {
+		quizStore.setMap3Seat(seat as any);
 	}
 
 	function selectDwelling1(value: string) {
@@ -128,9 +128,9 @@
 			group_size: quizState.groupSize || '',
 			priority: quizState.priority || '',
 			immersion: quizState.immersion || '',
-			map1_seat: quizState.map1Seat || { x: 0, y: 0 },
-			map2_seat: quizState.map2Seat || { x: 0, y: 0 },
-			map3_seat: quizState.map3Seat || { x: 0, y: 0 },
+			map1_seat: quizState.map1Seat || { id: '', type: '' },
+			map2_seat: quizState.map2Seat || { id: '', type: '' },
+			map3_seat: quizState.map3Seat || { id: '', type: '' },
 			dwelling1: quizState.dwelling1 || '',
 			dwelling2: quizState.dwelling2 || '',
 			archetype: quizState.archetype || ''
@@ -438,9 +438,9 @@
 					<div class="quiz-left">
 						<h2>Select the seat you typically take</h2>
 						<p class="context">Low occupancy</p>
-						<SeatMap 
-							width={200}
-							height={160}
+						<SeatMapSVG 
+							width={400}
+							height={380}
 							selectedSeat={quizState.map1Seat}
 							occupancy="low"
 							onSelect={handleMap1Select}
@@ -474,9 +474,9 @@
 					<div class="quiz-left">
 						<h2>Select the seat you typically take</h2>
 						<p class="context">Medium occupancy</p>
-<SeatMap 
-					width={300}
-					height={240}
+<SeatMapSVG 
+					width={400}
+					height={380}
 					selectedSeat={quizState.map2Seat}
 					occupancy="medium"
 					onSelect={handleMap2Select}
@@ -510,9 +510,9 @@
 					<div class="quiz-left">
 						<h2>Select the seat you typically take</h2>
 						<p class="context">High occupancy</p>
-						<SeatMap 
-							width={200}
-							height={160}
+						<SeatMapSVG 
+							width={400}
+							height={380}
 							selectedSeat={quizState.map3Seat}
 							occupancy="high"
 							onSelect={handleMap3Select}
@@ -536,30 +536,6 @@
 							<div class="picture-frame"><img src={getPictureSrc(10, 4)} alt="4"></div>
 						</div>
 					</div>
-				</div>
-			</div>
-		{/if}
-
-		{#if quizState.currentFrame === 10}
-			<div class="frame frame-map">
-				<h2>Select the seat you typically take</h2>
-				<p class="context">Moderate occupancy</p>
-<SeatMap 
-					width={300}
-					height={240}
-					selectedSeat={quizState.map1Seat}
-					occupancy="low"
-					onSelect={handleMap1Select}
-				/>
-				<div class="map-actions">
-					<button class="btn-secondary" onclick={prevFrame}>Back</button>
-					<button 
-						class="btn-primary" 
-						disabled={!quizState.map2Seat}
-						onclick={nextFrame}
-					>
-						Next
-					</button>
 				</div>
 			</div>
 		{/if}
@@ -599,32 +575,15 @@
 			<div class="frame">
 				<div class="frame-card">
 					<div class="quiz-left">
-						<h2>Select the seat you typically take</h2>
-						<p class="context">High occupancy</p>
-						<SeatMap 
-							width={200}
-							height={160}
-							selectedSeat={quizState.map3Seat}
-							occupancy="high"
-							onSelect={handleMap3Select}
-						/>
-						<div class="map-actions">
+						<h2>One more question</h2>
+						<div class="nav-actions">
 							<button class="btn-secondary" onclick={prevFrame}>Back</button>
-							<button 
-								class="btn-primary" 
-								disabled={!quizState.map3Seat}
-								onclick={nextFrame}
-							>
-								Next
-							</button>
+							<button class="btn-primary" onclick={nextFrame}>Next</button>
 						</div>
 					</div>
 					<div class="quiz-right">
-						<div class="picture-container picture-layout-4">
+						<div class="picture-container picture-layout-single">
 							<div class="picture-frame"><img src={getPictureSrc(12, 1)} alt="1"></div>
-							<div class="picture-frame"><img src={getPictureSrc(12, 2)} alt="2"></div>
-							<div class="picture-frame"><img src={getPictureSrc(12, 3)} alt="3"></div>
-							<div class="picture-frame"><img src={getPictureSrc(12, 4)} alt="4"></div>
 						</div>
 					</div>
 				</div>
@@ -741,7 +700,7 @@
 							<p>Loading aggregate data...</p>
 						{:else}
 							<div class="heatmap-container">
-								<Heatmap seats={aggregateData} width={200} height={160} previewMode={aggregateData.length === 0} />
+								<Heatmap seats={aggregateData} width={400} height={380} previewMode={aggregateData.length === 0} />
 							</div>
 							<p class="stats">
 								Showing {aggregateData.length} seat selections from {Math.ceil(aggregateData.length / 3)} submissions
