@@ -153,29 +153,65 @@
 		quizStore.reset();
 	}
 
-	let aggregateData: { x: number; y: number }[] = $state([]);
+	let aggregateData: ({ id: string; type: string; archetype?: string; dwelling_time?: string; activity?: string } | { x: number; y: number })[] = $state([]);
 	let selectedMealFilter = $state('All');
+	let dataMode = $state('submissions');
 	let loading = $state(true);
 	let availableMeals = $state<string[]>([]);
 
 	async function loadAggregateData() {
+		console.log('Loading aggregate data...');
 		try {
-			const url = selectedMealFilter === 'All' 
-				? '/api/aggregate' 
-				: `/api/aggregate?meal_time=${selectedMealFilter}`;
+			const mealParam = selectedMealFilter === 'All' ? '' : `meal_time=${selectedMealFilter}`;
+			const url = mealParam ? `/api/aggregate?${mealParam}&data_mode=${dataMode}` : `/api/aggregate?data_mode=${dataMode}`;
 			const res = await fetch(url);
+			console.log('API response:', res.status);
+			
+			if (!res.ok) {
+				console.error('API failed:', res.statusText);
+				loading = false;
+				return;
+			}
+			
 			const data = await res.json();
-			aggregateData = data.submissions?.flatMap((s: any) => [s.map1_seat, s.map2_seat, s.map3_seat]) || [];
+			console.log('Data received:', data);
+			
+			if (data.error) {
+				console.error('API error:', data.error);
+				loading = false;
+				return;
+			}
+			
 			availableMeals = data.availableMeals || [];
+			
+			const key = dataMode === 'observations' ? 'observations' : 'submissions';
+			const raw = data[key] || [];
+			
+			aggregateData = raw.flatMap((s: any) => {
+				const seat1 = typeof s.map1_seat === 'string' ? JSON.parse(s.map1_seat) : s.map1_seat;
+				const seat2 = typeof s.map2_seat === 'string' ? JSON.parse(s.map2_seat) : s.map2_seat;
+				const seat3 = typeof s.map3_seat === 'string' ? JSON.parse(s.map3_seat) : s.map3_seat;
+				return [
+					{ ...seat1, archetype: s.archetype, dwelling_time: s.dwelling1, activity: s.immersion },
+					{ ...seat2, archetype: s.archetype, dwelling_time: s.dwelling1, activity: s.immersion },
+					{ ...seat3, archetype: s.archetype, dwelling_time: s.dwelling1, activity: s.immersion }
+				];
+			});
+			console.log('Data processed, setting loading to false');
 			loading = false;
 		} catch (err) {
-			console.error('Failed to load aggregate data:', err);
+			console.error('Load error:', err);
 			loading = false;
 		}
 	}
 
+	function handleDataModeChange(mode: string) {
+		dataMode = mode;
+		loadAggregateData();
+	}
+
 	$effect(() => {
-		if (quizState.currentFrame === 11) {
+		if ($quizStore.currentFrame === 11) {
 			loadAggregateData();
 		}
 	});
@@ -610,7 +646,7 @@
 							<p>Loading aggregate data...</p>
 						{:else}
 							<div class="heatmap-container">
-								<Heatmap seats={aggregateData} width={400} height={380} previewMode={aggregateData.length === 0} />
+								<Heatmap seats={aggregateData} width={400} height={380} previewMode={aggregateData.length === 0} dataMode={dataMode} onDataModeChange={handleDataModeChange} />
 							</div>
 							<p class="stats">
 								Showing {aggregateData.length} seat selections from {Math.ceil(aggregateData.length / 3)} submissions
@@ -1019,33 +1055,43 @@
 	}
 
 	.filter-section {
-		margin-bottom: 1.5rem;
+		margin-bottom: 16px;
 		display: flex;
 		align-items: center;
 		gap: 12px;
 	}
 
+	.filter-section label {
+		display: block;
+		margin-bottom: 4px;
+		font-size: 14px;
+		color: #666;
+	}
+
 	.filter-section select {
-		padding: 8px 16px;
-		border-radius: 6px;
-		border: 1px solid #ddd;
-		font-size: 1rem;
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		font-size: 14px;
 	}
 
 	.heatmap-container {
-		margin: 1rem 0;
+		width: 100%;
+		margin: 16px 0;
 	}
 
 	.stats {
-		color: #888;
-		font-size: 0.9rem;
-		margin: 1rem 0;
+		font-size: 14px;
+		color: #666;
+		text-align: center;
+		margin: 8px 0;
 	}
 
 	.results-actions {
 		display: flex;
 		gap: 12px;
-		margin-top: 1rem;
+		justify-content: center;
+		margin-top: 20px;
 	}
 
 	.swipe-slider {
