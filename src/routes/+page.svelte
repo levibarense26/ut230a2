@@ -653,15 +653,54 @@
 							</p>
 						{/if}
 
-						<button class="btn-primary" onclick={restartQuiz}>Take Quiz Again</button>
+						<div class="nav-actions">
+							<button class="btn-secondary" onclick={prevFrame}>Back</button>
+							<button class="btn-primary" onclick={nextFrame}>Next</button>
+						</div>
 					</div>
-					<div class="quiz-right">
+					<div class="quiz-right2">
 						<div class="picture-container picture-layout-4">
 							<div class="picture-frame"><img src="/rusher.jpg" alt="1"></div>
 							<div class="picture-frame"><img src="/iPad_Kid.jpg" alt="2"></div>
 							<div class="picture-frame"><img src="/laptop.jpg" alt="3"></div>
 							<div class="picture-frame"><img src="/group_hangout.jpg" alt="4"></div>
 						</div>
+					</div>
+				</div>
+			</div>
+		{/if}
+
+		{#if quizState.currentFrame === 12}
+			<div class="frame">
+				<div class="frame-card2">
+					<div class="quiz-center2">
+						<h1>What do our archetypes mean?</h1>
+						<!-- <p class="subtitle">
+							Two main reasons: 
+							<span style="color: #82D5E1; font-weight:bold"> comfort </span>
+							and 
+							<span style="color: #82D5E1; font-weight:bold"> rejuvenation </span>.</p> -->
+						<p class="context" style="text-align: left;">
+							<span style='color: #82D5E1; font-weight:bold'>Rushers: </span> These eaters are in and out. These were the majority of observations. They get food before finding a seat and eat in fifteen minutes or less.  </p>
+						<p class="context" style="text-align: left;">
+							<span style='color: #82D5E1; font-weight:bold'>iPad Kids: </span> These are your typical college students, looking to eat a good dinner with a nice YouTube video in the background. They’re typically watching something on a mobile device and in the dining hall for less than thirty minutes.</p>
+						<p class="context" style="text-align: left;">
+							<span style='color: #82D5E1; font-weight:bold'>My Way or the Highway: </span> These users optimize their dining hall experiences as much as possible. Whether it’s moving chairs, using a laptop, or taking a booth for themselves, they’ll rule the roost.</p>
+						<p class="context" style="text-align: left;">
+							<span style='color: #82D5E1; font-weight:bold'>Group Hangout: </span> These users make the dining hall a hangout spot. They meet up with their friends and enjoy talking to each other while eating. Typically, groups stick around in the dining hall for at least 30 minutes and range from 2-7+ people. </p>
+						<p class="context" style="text-align: left;">
+							<span style='color: #82D5E1; font-weight:bold'>Unicorns: </span> These users don’t quite fit into any of our categories. They exhibit some characteristics that differentiate them from those in the existing categories, so they are separate from the rest.</p>
+						<button class="btn-primary" onclick={restartQuiz}>Take Quiz Again</button>
+						<button class="btn-secondary" onclick={prevFrame}>Back</button>
+					
+					<!-- </div>
+					<div class="quiz-right">
+						<div class="picture-container picture-layout-4">
+							<div class="picture-frame"><img src={getPictureSrc(2, 1)} alt="1"></div>
+							<div class="picture-frame"><img src={getPictureSrc(2, 2)} alt="2"></div>
+							<div class="picture-frame"><img src={getPictureSrc(2, 3)} alt="3"></div>
+							<div class="picture-frame"><img src={getPictureSrc(2, 4)} alt="4"></div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -730,7 +769,7 @@
 		border-radius: 8px;
 		flex: 0 0 30%;
 		height: 100%;
-		max-height: 80vh;
+		max-height: 100vh;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -765,6 +804,18 @@
 		overflow: hidden;
 	}
 
+	.quiz-right2 {
+		flex: 0 0 50%;
+		background: #e0e0e0;
+		border-radius: 8px;
+		height: 100%;
+		max-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+		overflow: hidden;
+	}
 .frame-card2 {
 		background: white;
 		border-radius: 12px;
