@@ -1,14 +1,23 @@
 import { writable, derived } from 'svelte/store';
 
+export const MEDIUM_OCCUPANCY_DISABLED = ['bench-11', 'bench-13', 'bench-14', 'bench-19', 'bench-6', 'bench-5', 'bench-2', 'chair-2', 'chair-7', 'chair-4', 'chair-5', 'chair-10', 'chair-20', 'chair-16', 'chair-6', 'chair-24', 'chair-25', 'chair-30', 'chair-27', 'chair-35', 'chair-37', 'chair-31'] as const;
+
+export const LOW_OCCUPANCY_DISABLED = ['chair-3', 'bench-1', 'bench-2', 'bench-5', 'bench-6', 'bench-8', 'bench-10', 'chair-37', 'chair-38', 'chair-40', 'chair-35', 'chair-31', 'chair-33', 'chair-26', 'chair-22', 'chair-24', 'chair-25', 'chair-30', 'chair-29', 'chair-19', 'chair-20', 'chair-13', 'chair-11', 'chair-17', 'chair-16', 'chair-6', 'chair-9', 'chair-15', 'chair-10', 'chair-5'] as const;
+
+export interface PlacedSeat {
+	id: string;
+	type: 'chair' | 'bench';
+}
+
 export interface QuizState {
 	currentFrame: number;
 	mealTime: string | null;
 	groupSize: string | null;
 	priority: string | null;
 	immersion: string | null;
-	map1Seat: { x: number; y: number } | null;
-	map2Seat: { x: number; y: number } | null;
-	map3Seat: { x: number; y: number } | null;
+	map1Seat: PlacedSeat | null;
+	map2Seat: PlacedSeat | null;
+	map3Seat: PlacedSeat | null;
 	dwelling1: string | null;
 	dwelling2: string | null;
 	archetype: string | null;
@@ -39,9 +48,9 @@ function createQuizStore() {
 		setGroupSize: (value: string) => update((s) => ({ ...s, groupSize: value })),
 		setPriority: (value: string) => update((s) => ({ ...s, priority: value })),
 		setImmersion: (value: string) => update((s) => ({ ...s, immersion: value })),
-		setMap1Seat: (seat: { x: number; y: number }) => update((s) => ({ ...s, map1Seat: seat })),
-		setMap2Seat: (seat: { x: number; y: number }) => update((s) => ({ ...s, map2Seat: seat })),
-		setMap3Seat: (seat: { x: number; y: number }) => update((s) => ({ ...s, map3Seat: seat })),
+		setMap1Seat: (seat: PlacedSeat) => update((s) => ({ ...s, map1Seat: seat })),
+		setMap2Seat: (seat: PlacedSeat) => update((s) => ({ ...s, map2Seat: seat })),
+		setMap3Seat: (seat: PlacedSeat) => update((s) => ({ ...s, map3Seat: seat })),
 		setDwelling1: (value: string) => update((s) => ({ ...s, dwelling1: value })),
 		setDwelling2: (value: string) => update((s) => ({ ...s, dwelling2: value })),
 		setArchetype: (value: string) => update((s) => ({ ...s, archetype: value })),
